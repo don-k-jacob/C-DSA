@@ -1,0 +1,105 @@
+//Implement Breadth First Search on Graph
+#include<stdio.h>
+#include<stdlib.h>
+#define N 5
+int front,rear,SIZE,arr[20],adj[10][10];
+int visited[10],count=0;
+void enqueue(int elmt)
+{
+	if(front==-1)
+		front=0;
+	if(front==N-1)
+		printf("The Queue is Full\n");
+	else
+	{
+		rear++;
+		arr[rear]=elmt;
+		
+	}
+}
+void dequeue()
+{
+	int val;
+	if(front==rear)
+		front=rear=-1;		
+	else
+		front++;
+}
+int is_empty()
+{
+	if(front>rear||front==-1)
+		return 1;
+	else 
+		return 0;
+}
+
+void read_vertices() // Using Adjacency Matrix Method
+{
+	int i,j;
+	printf("Enter the total number of vertices\n");
+	scanf("%d",&SIZE);
+	for(i=0;i<SIZE;i++)			 // Initializing Visited Array to 0 
+		visited[i]=0; 			// All vertices un-visited initially
+	printf("Enter Adjacency Matrix\n");
+	for(i=0;i<SIZE;i++)
+	{
+		for(j=0;j<SIZE;j++)
+			scanf("%d",&adj[i][j]);
+	}
+}
+void get_unexplored(int vertex)
+{
+	int i,j=0,flag=0;
+	for(i=0;i<SIZE;i++)
+	{
+		if(adj[vertex][i]==1 && visited[i]==0)
+		{
+			if(not_in_queue(i))
+				enqueue(i);		
+		}
+	}
+}
+int not_in_queue(int elmt)
+{
+	int i,flag=0;
+	for(i=0;i<N;i++)
+	{
+		if(arr[i]==elmt)
+		{
+			flag=1;
+			break;
+		}
+	}
+	if(flag==1)
+		return 0;
+	else
+		return 1;
+}
+void perform_bfs(int S)
+{
+	while(!is_empty())		//Repeat until queue is empty
+	{
+		printf("%d\t",S);
+		visited[S]=1;
+		get_unexplored(S);
+		dequeue();
+		S=arr[front];
+		visited[S]=1;
+		count++;		
+	}
+	if(count!=SIZE)
+		printf("\nUnable to complete BFS as the graph is disconnected\n");
+}
+void main()
+{
+	int S,i;
+	front=rear=-1;
+	read_vertices();		// Read the Vertices & Edges
+	for(i=0;i<N;i++)
+		arr[i]=-1;
+	printf("Enter Starting Vertex\n");
+	scanf("%d",&S);
+	printf("\nThe Result of BFS Traversal is:\n");
+	enqueue(S);
+	perform_bfs(S);
+}
